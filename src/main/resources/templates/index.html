@@ -6,5 +6,24 @@
 </head>
 <body>
 <h1>My Recipes!</h1>
+<table id="recipes">
+    <thead>
+    <tr>
+        <td>Recipe Id</td>
+        <td>Recipe Description</td>
+        <td>Cook time</td>
+        <td>Prep time</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="recipe: ${recipes}">
+        <td th:text="${recipe.id}">1L</td>
+        <td th:text="${recipe.description}">food</td>
+        <td th:text="${recipe.cookTime}">0</td>
+        <td th:text="${recipe.prepTime}">0</td>
+    </tr>
+
+    </tbody>
+</table>
 </body>
 </html>
