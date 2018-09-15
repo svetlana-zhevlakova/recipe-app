@@ -117,10 +117,16 @@ public class Recipe {
 
     public void setNotes(Notes notes) {
         this.notes = notes;
+        notes.setRecipe(this);
     }
 
     public Set<Ingredient> getIngredients() {
         return ingredients;
+    }
+
+    public void addIngredient(Ingredient ingredient){
+        ingredients.add(ingredient);
+        ingredient.setRecipe(this);
     }
 
     public void setIngredients(Set<Ingredient> ingredients) {
