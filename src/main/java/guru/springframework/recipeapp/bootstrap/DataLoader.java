@@ -1,18 +1,26 @@
 package guru.springframework.recipeapp.bootstrap;
 
-import guru.springframework.recipeapp.model.*;
+import guru.springframework.recipeapp.model.Category;
+import guru.springframework.recipeapp.model.Difficulty;
+import guru.springframework.recipeapp.model.Ingredient;
+import guru.springframework.recipeapp.model.Notes;
+import guru.springframework.recipeapp.model.Recipe;
+import guru.springframework.recipeapp.model.UnitOfMeasure;
 import guru.springframework.recipeapp.repository.CategoryRepository;
 import guru.springframework.recipeapp.repository.RecipeRepository;
 import guru.springframework.recipeapp.repository.UnitOfMeasureRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Component
 public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
 
@@ -28,6 +36,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
     }
 
     @Override
+    @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         recipeRepository.saveAll(getRecipes());
     }
@@ -36,6 +45,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         List<Recipe> recipes = new ArrayList<>(2);
 
         //get UOMs
+        log.debug("Loading units of measure");
         UnitOfMeasure each = loadUOM("Each");
         UnitOfMeasure teaSpoon = loadUOM("Teaspoon");
         UnitOfMeasure tableSpoon = loadUOM("Tablespoon");
@@ -44,10 +54,12 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         UnitOfMeasure cup = loadUOM("Cup");
 
         //get categories
+        log.debug("Loading categories");
         Category american = loadCategory("American");
         Category mexican = loadCategory("Mexican");
 
         //guacamole
+        log.debug("Loading guacamole");
         Recipe guacamoleRecipe = new Recipe();
         guacamoleRecipe.setDescription("Perfect Guacamole");
         guacamoleRecipe.setCookTime(0);
@@ -113,6 +125,7 @@ public class DataLoader implements ApplicationListener<ContextRefreshedEvent> {
         recipes.add(guacamoleRecipe);
 
         //tacos
+        log.debug("Loading tacos");
         Recipe tacosRecipe = new Recipe();
         tacosRecipe.setDescription("Spicy Grilled Chicken Taco");
         tacosRecipe.setCookTime(9);
