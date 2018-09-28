@@ -37,7 +37,7 @@ public class RecipeServiceImplTest {
     RecipeCommandToRecipe recipeCommandToRecipe;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         recipeService = new RecipeServiceImpl(recipeRepository, recipeToRecipeCommand, recipeCommandToRecipe);
     }
@@ -90,6 +90,29 @@ public class RecipeServiceImplTest {
         assertEquals(ID, savedRecipeCommand.getId());
         verify(recipeRepository, times(1)).save(any(Recipe.class));
         verify(recipeCommandToRecipe, times(1)).convert(recipeCommand);
+        verify(recipeToRecipeCommand, times(1)).convert(any(Recipe.class));
+    }
+
+    @Test
+    public void testFindCommandById(){
+        //given
+        long id = 1L;
+
+        Recipe recipe = new Recipe();
+        recipe.setId(id);
+        Optional<Recipe> optionalRecipe = Optional.of(recipe);
+        when(recipeRepository.findById(id)).thenReturn(optionalRecipe);
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(id);
+        when(recipeToRecipeCommand.convert(optionalRecipe.get())).thenReturn(recipeCommand);
+
+        //when
+        RecipeCommand command = recipeService.findCommandById(id);
+
+        //then
+        assertEquals(new Long(id), command.getId());
+        verify(recipeRepository, times(1)).findById(id);
         verify(recipeToRecipeCommand, times(1)).convert(any(Recipe.class));
     }
 }

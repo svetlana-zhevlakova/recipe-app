@@ -7,6 +7,7 @@ import guru.springframework.recipeapp.model.Recipe;
 import guru.springframework.recipeapp.repository.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class RecipeServiceImpl implements RecipeService {
         return recipeRepository.findById(id).orElseThrow(() -> new RuntimeException("Recipe not found"));
     }
 
+    @Transactional
     @Override
     public RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand) {
         Recipe recipe = recipeCommandToRecipe.convert(recipeCommand);
@@ -46,5 +48,11 @@ public class RecipeServiceImpl implements RecipeService {
         Recipe savedRecipe = recipeRepository.save(recipe);
         log.debug("saveRecipeCommand() is finished");
         return recipeToRecipeCommand.convert(savedRecipe);
+    }
+
+    @Transactional
+    @Override
+    public RecipeCommand findCommandById(Long id) {
+        return recipeToRecipeCommand.convert(findById(id));
     }
 }
